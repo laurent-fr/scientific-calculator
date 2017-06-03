@@ -11,6 +11,7 @@ void disp_init();
 
 void digit_add(unsigned char d);
 void disp_mod_exponent();
+void disp_move_dot();
 void digit_change_sign();
 
 #endif

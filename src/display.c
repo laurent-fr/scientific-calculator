@@ -37,6 +37,7 @@ __code unsigned char digits[] = {
 unsigned char *current_digit;
 unsigned char digit_counter;
 unsigned char *sign_digit;
+unsigned char moving_dot;
 
 void display() {
 
@@ -50,8 +51,9 @@ void display() {
     do {
         P0=digits[*display];
         display++;
-        P2>>=1;
         disp_delay();
+        P0=0;
+        P2 = P2>>1 | 0x80;  
     } while (--i!=0);
 
     i=4;
@@ -59,8 +61,9 @@ void display() {
     do {
        P0=digits[*display];
        display++; 
-       P3<<=1;
        disp_delay();
+       P0=0;
+       P3 = P3<<1 | 0x01;
     } while (--i!=0);
 
 }
@@ -75,6 +78,11 @@ void disp_init() {
     current_digit=display_mem+8;
     sign_digit=display_mem;
     digit_counter=8;
+    moving_dot=0;
+}
+
+void disp_move_dot() {
+    moving_dot=1;
 }
 
 void disp_delay() __naked {
@@ -95,14 +103,28 @@ void disp_mod_exponent() {
     current_digit=display_mem+11;
     sign_digit=display_mem+9;
     digit_counter=2;
+    moving_dot=0;
 }
 
 void digit_add(unsigned char d) {
+    char i;
 
     if(digit_counter==0) return;
 
+    if (sign_digit==display_mem) {
+        // mantiss
+        for(i=8;i>1;i--) {
+            if (moving_dot)
+                display_mem[i-1]=display_mem[i];
+            else
+                display_mem[i-1]=display_mem[i] & 0x0f;
+        }
+    } else {
+        // exponent
+        display_mem[10]=display_mem[11];
+    }
+
     *current_digit=d;
-    current_digit--;
     digit_counter--;
 }
 
