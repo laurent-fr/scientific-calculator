@@ -15,8 +15,8 @@ __code unsigned char digits[] = {
 	0b00000000, // 7
 	0b00001010, // 8
 	0b01111110, // 9
+    0b00001000, // -
     0b00000000, // ' '
-    0b00000000,
     0b00000000,
     0b00000000,
     0b00000000,
@@ -34,7 +34,9 @@ __code unsigned char digits[] = {
 	0b01111111, // 9.
 };
 
-
+unsigned char *current_digit;
+unsigned char digit_counter;
+unsigned char *sign_digit;
 
 void display() {
 
@@ -69,6 +71,10 @@ void disp_init() {
         display_mem[i]=DIGIT_BLANK;
     }
     display_mem[8]= (0+DIGIT_DOT);
+
+    current_digit=display_mem+8;
+    sign_digit=display_mem;
+    digit_counter=8;
 }
 
 void disp_delay() __naked {
@@ -82,4 +88,27 @@ disp_delay_loop:
     ret
 __endasm;
 
+}
+
+
+void disp_mod_exponent() {
+    current_digit=display_mem+11;
+    sign_digit=display_mem+9;
+    digit_counter=2;
+}
+
+void digit_add(unsigned char d) {
+
+    if(digit_counter==0) return;
+
+    *current_digit=d;
+    current_digit--;
+    digit_counter--;
+}
+
+void digit_change_sign() {
+    if (*sign_digit==DIGIT_BLANK)
+        *sign_digit=DIGIT_MINUS;
+    else
+        *sign_digit=DIGIT_BLANK;
 }

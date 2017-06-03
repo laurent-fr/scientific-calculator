@@ -2,7 +2,7 @@
 #define KEYBOARD_H
 
 // row 1
-#define KEY_r1c1 0
+#define KEY_2ND 0
 #define KEY_r1c2 1
 #define KEY_r1c3 2
 #define KEY_r1c4 3
@@ -29,7 +29,7 @@
 #define KEY_1 20
 #define KEY_2 21
 #define KEY_3 22
-#define KEY_r3c8 23
+#define KEY_E 23
 
 // row 4
 #define KEY_r4c1 24
@@ -37,9 +37,9 @@
 #define KEY_r4c3 26
 #define KEY_r4c4 27
 #define KEY_0 28
-#define KEY_r4c6 29
-#define KEY_r4c7 30
-#define KEY_r4c8 31
+#define KEY_DOT 29
+#define KEY_SIGN 30
+#define KEY_ENTER 31
 
 char readkey();
 char readkey_col();

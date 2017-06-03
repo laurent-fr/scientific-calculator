@@ -14,16 +14,19 @@ void loop() {
     key = readkey();
 
     switch(key) {
-        case KEY_0:
-        case KEY_1:
-        case KEY_2:
-        case KEY_3:
-        case KEY_4:
-        case KEY_5:
-        case KEY_6:
-        case KEY_7:
-        case KEY_8:
-        case KEY_9:
+        case KEY_0: digit_add(0); break;
+        case KEY_1: digit_add(1); break;
+        case KEY_2: digit_add(2); break;
+        case KEY_3: digit_add(3); break;
+        case KEY_4: digit_add(4); break;
+        case KEY_5: digit_add(5); break;
+        case KEY_6: digit_add(6); break;
+        case KEY_7: digit_add(7); break;
+        case KEY_8: digit_add(8); break;
+        case KEY_9: digit_add(9); break;
+        case KEY_DOT:
+        case KEY_E: disp_mod_exponent(); break;
+        case KEY_SIGN: digit_change_sign(); break;
     }
 }
 
