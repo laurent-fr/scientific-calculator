@@ -2,6 +2,11 @@
 #include "keyboard.h"
 #include <at89c55.h>
 
+/** Read the key matrix
+ *
+ * probe each 4 columns to see if a key on one of the 8 rows is pressed
+ * @return col*8+row if a key is pressed, -1 otherwise
+ */
 char readkey() {
     char col;
     
@@ -38,6 +43,10 @@ char readkey() {
     return -1;
 }
 
+/** Read the columns of the key matrix
+ *
+ * @return the column number a key is pressed, -1 otherwise
+ */
 char readkey_col() {
 
     if (P1_0) return 0;

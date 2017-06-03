@@ -2,9 +2,9 @@
 #include "display.h"
 #include <at89c55.h>
 
-__data __at(0x20) unsigned char display_mem[12];
+__data __at(0x20) unsigned char display_mem[12]; /** The display memory */
 
-__code unsigned char digits[] = {
+__code unsigned char digits[] = { /** 7 segment digits */
     0b11101010, // 0
 	0b00100100, // 1
 	0b00101000, // 2
@@ -34,11 +34,18 @@ __code unsigned char digits[] = {
 	0b01111111, // 9.
 };
 
-unsigned char *current_digit;
-unsigned char digit_counter;
-unsigned char *sign_digit;
-unsigned char moving_dot;
+unsigned char *current_digit; /** pointer to the display memory where
+    new digits will be put */
+unsigned char digit_counter; /** number of digits which can be entered
+    before running out of space */
+unsigned char *sign_digit; /** pointer to the sign (mantiss or exponent)
+    in the display memory */
+unsigned char moving_dot; /** flag put to 1 where the dot key is pressed */
 
+/** Display the digits
+ *
+ * All digits refrenced in display_mem are pushed on the 7 seg. displays
+ */
 void display() {
 
     unsigned char *display = display_mem;
@@ -68,6 +75,10 @@ void display() {
 
 }
 
+/** Init the display memory
+ *
+ * The memory contains '       0.   '
+ */
 void disp_init() {
     unsigned char i;
     for (i=0;i<12;i++) {
@@ -81,10 +92,17 @@ void disp_init() {
     moving_dot=0;
 }
 
+/** Dot key action
+ *
+ */
 void disp_move_dot() {
     moving_dot=1;
 }
 
+/** Delay function
+ *
+ * A small delay for the display function , rougly 100hz for whole display
+ */
 void disp_delay() __naked {
 
 __asm
@@ -98,7 +116,10 @@ __endasm;
 
 }
 
-
+/** Exponent mode
+ *
+ * The next digit actions will occurs on the 3 last digits of the display
+ */
 void disp_mod_exponent() {
     current_digit=display_mem+11;
     sign_digit=display_mem+9;
@@ -106,6 +127,11 @@ void disp_mod_exponent() {
     moving_dot=0;
 }
 
+/** Add a digit to the display memory
+ *
+ * All the digits are shifted left (with the dot if moving_dot is TRUE)
+ * The new digit d is put on the right position
+ */
 void digit_add(unsigned char d) {
     char i;
 
@@ -128,6 +154,10 @@ void digit_add(unsigned char d) {
     digit_counter--;
 }
 
+/** Change the sign
+ *
+ * Change the sign in position 0 (Mantiss) or position 8 (Exponent)
+ */
 void digit_change_sign() {
     if (*sign_digit==DIGIT_BLANK)
         *sign_digit=DIGIT_MINUS;

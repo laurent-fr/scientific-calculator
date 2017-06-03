@@ -4,9 +4,9 @@ dist: build/main.ihx
 	packihx build/main.ihx > dist/calc.hex
 
 build/main.ihx: build/main.rel build/display.rel build/keyboard.rel \
-	build/number.rel
+	build/number.rel build/stack.rel
 	$(CC) build/main.rel build/display.rel build/keyboard.rel \
-		build/number.rel
+		build/number.rel build/stack.rel
 
 build/main.rel: src/main.c
 	$(CC) -c src/main.c
@@ -19,6 +19,9 @@ build/keyboard.rel: src/keyboard.c
 
 build/number.rel: src/number.c
 	$(CC) -c src/number.c
+
+build/stack.rel: src/stack.c
+	$(CC) -c src/stack.c
 
 clean:
 	rm -f dist/*

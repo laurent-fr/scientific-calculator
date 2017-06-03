@@ -2,7 +2,7 @@
 #include "display.h"
 #include "keyboard.h"
 
-#include "number.h"
+#include "stack.h"
 
 void init() {
     disp_init();
@@ -16,7 +16,7 @@ void loop() {
         display();
     }
     disp_delay();
-    
+
     // wait for a key
     do {
         display();

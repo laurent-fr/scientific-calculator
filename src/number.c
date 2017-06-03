@@ -3,7 +3,7 @@
 
 // n1 <- n1+n2
 void number_add(t_number *n1,t_number *n2) {
-
+    
 }
 
 // n1 <- n1-n2
