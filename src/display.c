@@ -143,7 +143,9 @@ __endasm;
  * The next digit actions will occurs on the 3 last digits of the display
  */
 void disp_mod_exponent() {
-    current_digit=display_mem+11;
+    current_digit=display_mem+10;
+    *(current_digit++)=0;
+    *current_digit=0; // current_digit <- display_mem+11
     sign_digit=display_mem+9;
     digit_counter=2;
     moving_dot=0;

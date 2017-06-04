@@ -3,8 +3,8 @@
 
 // row 1
 #define KEY_2ND 0
-#define KEY_PI 1
-#define KEY_E 1 // 2nd
+#define KEY_CONST_PI 1
+#define KEY_CONST_E 1 // 2nd
 #define KEY_SQRT 2
 #define KEY_SQR 2 // 2nd
 #define KEY_7 3

@@ -45,11 +45,18 @@ void mantiss_inc(__idata unsigned char *m) {
 }
 
 void mantiss_complement(__idata unsigned char *m) {
-    m;
+    int i;
+    __idata unsigned char *ptr=m;
+    for(i=0;i<MANTISS_BYTES;i ++) {
+        *ptr=0x99-*ptr;
+        ptr++;
+    }
+    mantiss_inc(m);
 }
 
 void mantiss_da(__idata unsigned char *m) __naked {
 
+// TODO : carry ...
 #ifdef IS_TARGET
     m;
 
@@ -60,7 +67,7 @@ void mantiss_da(__idata unsigned char *m) __naked {
     mov r6,#6
     mantiss_da_loop$:
     mov a,r0
-    da a
+    da a 
     mov r0,a
     djnz r6,mantiss_da_loop$
     pop ar6
@@ -71,8 +78,11 @@ void mantiss_da(__idata unsigned char *m) __naked {
 #else
 
     int i;
+    unsigned char carry=0;
     for(i=0;i<MANTISS_BYTES;i++) {
+        *m+=carry;
         if ((*m&0xf)>9) *m+=6;
+        if ((*m&0xf0)>0x90) { *m+=0x60; carry=1; } else carry=0;
         m++;
     }
 
@@ -93,7 +103,13 @@ void exponent_inc(__idata unsigned char *e) {
 }
 
 void exponent_complement(__idata unsigned char *e) {
-    e;
+    int i;
+    __idata unsigned char *ptr=e;
+    for(i=0;i<EXPONENT_BYTES;i ++) {
+        *ptr=0x99-*ptr;
+        ptr++;
+    }
+    exponent_inc(e);
 }
 
 void exponent_da(__idata unsigned char *e) __naked {
