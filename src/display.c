@@ -243,3 +243,8 @@ void disp_to_number(__idata t_number *n) {
     if (display_mem[0]==DIGIT_MINUS) mantiss_complement(n->m);
     if (display_mem[9]==DIGIT_MINUS) exponent_complement(n->e);
 }
+
+
+void disp_from_number(__idata t_number *n) {
+    n;
+}

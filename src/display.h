@@ -18,5 +18,6 @@ void disp_move_dot();
 void disp_change_sign();
 
 void disp_to_number(__idata t_number *n);
+void disp_from_number(__idata t_number *n);
 
 #endif

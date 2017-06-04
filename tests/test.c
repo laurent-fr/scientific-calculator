@@ -9,6 +9,7 @@
 
 #include "display.h"
 #include "number.h"
+#include "stack.h"
 
 extern unsigned char display_mem[];
 
@@ -156,7 +157,7 @@ void test_disp_to_number() {
 	disp_change_sign();
 	printf_display_mem("0a 0b 0b 0b 0b 0b 0b 0b 11 0b 0b 0b");	
 	disp_to_number(&n);
-	printf_number(&n,"00 00 00 01 23 00 / 02 00");
+	printf_number(&n,"00 00 00 00 99 99 / 00 00");
 
 	// 1E-3
 	disp_init();
@@ -172,11 +173,60 @@ void test_disp_to_number() {
 
 }
 
+void test_add() {
+	t_number *n;
+
+	printf_test("add");
+
+	stack_init();
+
+	// 5.
+	disp_init();
+	display_mem[8]=0x15;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 05 00 / 00 00");
+
+	// 9.
+	disp_init();
+	display_mem[8]=0x19;
+	n=stack_allocate();	
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 09 00 / 00 00");
+
+	// 9.+5. = 14.
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 14 00 / 00 00");
+
+	// -1.
+	disp_init();
+	display_mem[8]=0x11;
+	disp_change_sign();
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 99 99 / 00 00");
+
+	// 1.
+	disp_init();
+	display_mem[8]=0x11;
+	n=stack_allocate();	
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 01 00 / 00 00");
+
+	// -1.+1. = 0.
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 00 00 / 00 00");
+
+
+
+
+}
 
 void main() {
 
 	test_disp_add_digit();
 	test_disp_to_number();
+	test_add();
 
 	if (exit_code==0) 
 		printf("\nSUCCESS !\n");

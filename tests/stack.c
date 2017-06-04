@@ -4,14 +4,14 @@
 #define STACK_SIZE 16
 #define STACK_ADDR 0x80
 
-__idata __at(STACK_ADDR) t_number stack[STACK_SIZE];
-__idata t_number *stack_ptr;
+t_number stack[STACK_SIZE];
+t_number *stack_ptr;
 
 void stack_init() {
     stack_ptr=0;
 }
 
-__idata t_number *stack_allocate() {
+t_number *stack_allocate() {
     if (stack_ptr==0) {
         stack_ptr=stack;
         return stack_ptr;
@@ -23,13 +23,13 @@ __idata t_number *stack_allocate() {
     return stack_ptr;
 }
 
-__idata t_number *stack_peek() {
+t_number *stack_peek() {
     return stack_ptr;
 }
 
 // TODO : stack empty ...
 void stack_op_add() {
-    __idata t_number *ptr=stack_ptr-1;
+    t_number *ptr=stack_ptr-1;
     number_add(ptr,stack_ptr);
     stack_ptr=ptr;
 }

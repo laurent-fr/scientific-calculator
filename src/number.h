@@ -1,6 +1,8 @@
 #ifndef NUMBER_H
 #define NUMBER_H
 
+#define MANTISS_DIGITS 10
+#define EXPONENT_DIGITS 2
 #define MANTISS_BYTES 6
 #define EXPONENT_BYTES 2
 #define NUMBER_SIZE (MANTISS_BYTES+EXPONENT_BYTES)
@@ -22,6 +24,7 @@ unsigned char mantiss_is_zero(__idata unsigned char *m);
 void mantiss_inc(__idata unsigned char *m);
 void mantiss_complement(__idata unsigned char *m);
 void mantiss_da(__idata unsigned char *m);
+unsigned char mantiss_is_negative(__idata unsigned char *m);
 
 // exponent functions
 void exponent_set_zero(__idata unsigned char *e);

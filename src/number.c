@@ -5,8 +5,20 @@
 
 // n1 <- n1+n2
 void number_add(__idata t_number *n1,__idata t_number *n2) {
-    n1;
-    n2;
+    __idata unsigned char *ptr1;
+    __idata unsigned char *ptr2;
+    unsigned char is_positive=1;
+    unsigned char i;
+
+    // adjust the exponents
+    // TODO
+
+    // sum the mantisses
+    ptr1=n1->m;
+    ptr2=n2->m;
+    for(i=0;i<MANTISS_BYTES;i++) *(ptr1++)+=*(ptr2++);
+    mantiss_da(n1->m);
+    
 }
 
 // n1 <- n1-n2
@@ -45,13 +57,17 @@ void mantiss_inc(__idata unsigned char *m) {
 }
 
 void mantiss_complement(__idata unsigned char *m) {
-    int i;
+    unsigned char i;
     __idata unsigned char *ptr=m;
     for(i=0;i<MANTISS_BYTES;i ++) {
         *ptr=0x99-*ptr;
         ptr++;
     }
     mantiss_inc(m);
+}
+
+unsigned char mantiss_is_negative(__idata unsigned char *m) {
+    return *(m+5)?1:0;
 }
 
 void mantiss_da(__idata unsigned char *m) __naked {
@@ -103,7 +119,7 @@ void exponent_inc(__idata unsigned char *e) {
 }
 
 void exponent_complement(__idata unsigned char *e) {
-    int i;
+    unsigned char i;
     __idata unsigned char *ptr=e;
     for(i=0;i<EXPONENT_BYTES;i ++) {
         *ptr=0x99-*ptr;

@@ -4,15 +4,16 @@ testsuite: clean prepare tests
 	./testsuite
 
 prepare:
-	cp ../src/number* .
-	cp ../src/display* .
+	cp ../src/number.* .
+	cp ../src/display.* .
+	cp ../src/stack.* .
 	for f in `ls -1 *.[c,h]` ; do \
 	sed -i 's/__[^ ]* //g' $$f ; \
 	sed -i '/#define IS_TARGET/d' $$f ; \
 	done
 
-tests: test.o number.o display.o
-	$(CC) -o testsuite test.o number.o display.o
+tests: test.o number.o display.o stack.o
+	$(CC) -o testsuite test.o number.o display.o stack.o
 
 number.o: number.c
 	$(CC) -c number.c

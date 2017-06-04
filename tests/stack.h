@@ -5,9 +5,9 @@
 
 void stack_init();
 
-__idata t_number *stack_allocate();
+t_number *stack_allocate();
 
-__idata t_number *stack_peek();
+t_number *stack_peek();
 
 void stack_op_add();
 void stack_op_sub();
