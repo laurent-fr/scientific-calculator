@@ -3,5 +3,6 @@
 
 #include "number.h"
 
+void stack_init();
 
 #endif

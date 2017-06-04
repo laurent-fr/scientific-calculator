@@ -1,7 +1,12 @@
 
 #include "display.h"
 #include "number.h"
+
+#define IS_TARGET 1
+
+#ifdef IS_TARGET
 #include <at89c55.h>
+#endif
 
 /* The display is made of 12*7 seg. :
  * [S][M][M][M][M][M][M][M][M][S][E][E]
@@ -54,11 +59,30 @@ __data unsigned char *sign_digit; /** pointer to the sign (mantiss or exponent)
     in the display memory */
 unsigned char moving_dot; /** flag put to 1 where the dot key is pressed */
 
+
+/** Init the display memory
+ *
+ * The memory contains '       0.   '
+ */
+void disp_init() {
+    unsigned char i;
+    for (i=0;i<12;i++) {
+        display_mem[i]=DIGIT_BLANK;
+    }
+    display_mem[8]= (0+DIGIT_DOT);
+
+    current_digit=display_mem+8;
+    sign_digit=display_mem;
+    digit_counter=8;
+    moving_dot=0;
+}
+
 /** Display the digits
  *
  * All digits refrenced in display_mem are pushed on the 7 seg. displays
  */
-void display() {
+#ifdef IS_TARGET
+void disp_do_display() {
 
     __data unsigned char *display = display_mem;
     unsigned char i;
@@ -86,23 +110,7 @@ void display() {
     } while (--i!=0);
 
 }
-
-/** Init the display memory
- *
- * The memory contains '       0.   '
- */
-void disp_init() {
-    unsigned char i;
-    for (i=0;i<12;i++) {
-        display_mem[i]=DIGIT_BLANK;
-    }
-    display_mem[8]= (0+DIGIT_DOT);
-
-    current_digit=display_mem+8;
-    sign_digit=display_mem;
-    digit_counter=8;
-    moving_dot=0;
-}
+#endif
 
 /** Dot key action
  *
@@ -115,6 +123,7 @@ void disp_move_dot() {
  *
  * A small delay for the display function , rougly 100hz for whole display
  */
+ #ifdef IS_TARGET
 void disp_delay() __naked {
 
 __asm
@@ -127,6 +136,7 @@ disp_delay_loop:
 __endasm;
 
 }
+#endif 
 
 /** Exponent mode
  *
@@ -144,25 +154,29 @@ void disp_mod_exponent() {
  * All the digits are shifted left (with the dot if moving_dot is TRUE)
  * The new digit d is put on the right position
  */
-void digit_add(unsigned char d) {
+void disp_add_digit(unsigned char d) {
     char i;
 
     if(digit_counter==0) return;
 
     if (sign_digit==display_mem) {
         // mantiss
-        for(i=8;i>1;i--) {
+        for(i=1;i<8;i++) {
             if (moving_dot)
-                display_mem[i-1]=display_mem[i];
+                display_mem[i]=display_mem[i+1];
             else
-                display_mem[i-1]=display_mem[i] & 0x0f;
+                display_mem[i]=(display_mem[i]&0xf0) | (display_mem[i+1] & 0x0f);
         }
     } else {
         // exponent
         display_mem[10]=display_mem[11];
     }
 
-    *current_digit=d;
+    if (moving_dot)
+        *current_digit=d;
+    else
+        *current_digit=(*current_digit&0xf0) | d;
+
     digit_counter--;
 }
 
@@ -170,19 +184,11 @@ void digit_add(unsigned char d) {
  *
  * Change the sign in position 0 (Mantiss) or position 8 (Exponent)
  */
-void digit_change_sign() {
+void disp_change_sign() {
     if (*sign_digit==DIGIT_BLANK)
         *sign_digit=DIGIT_MINUS;
     else
         *sign_digit=DIGIT_BLANK;
-}
-
-unsigned char disp_is_zero() {
-    unsigned char i;
-    for(i=1;i<9;i++) {  
-        if (display_mem[i]) return 0;
-    }
-    return 1;
 }
 
 /** Convert the data in the display memory to a number
@@ -197,15 +203,14 @@ void disp_to_number(__idata t_number *n) {
     unsigned char dot_pos=0;
     __idata unsigned char *ptr;
 
-    // check if the number is 0
-    if (disp_is_zero()) {
-        mantiss_set_zero(n->m);
-        exponent_set_zero(n->e);
-        return;
+    // set the exponent if blank
+    if (display_mem[11]==DIGIT_BLANK) {
+        display_mem[10]=0;
+        display_mem[11]=0;
     }
-
+	
     // align the mantiss to the left of the display
-    while(display_mem[1]==0) {
+    while(display_mem[1]==DIGIT_BLANK) {
         for(i=1;i<8;i++) {
             display_mem[i]=display_mem[i+1];
         }
@@ -215,7 +220,7 @@ void disp_to_number(__idata t_number *n) {
     // pack the display data to the number
     ptr=n->m;
     *(ptr++)=0x00;
-    for(i=8;i>0;i-=2) *(ptr++)=((display_mem[i-1]&0x0f)<<4)|(display_mem[i]&0x0f);
+    for(i=8;i>0;i-=2) *(ptr++)=((display_mem[i]&0x0f)<<4)|(display_mem[i-1]&0x0f);
     *(ptr++)=0x00;
     ptr=n->e;
     *(ptr++)=(display_mem[10]<<4)|display_mem[11];
