@@ -2,6 +2,14 @@
 #include "keyboard.h"
 #include <at89c55.h>
 
+/* The keyboard is made of 32 keys (4 columns and 8 rows)
+ * To check if a key is pressed, all columns must be set to LOW, one by one.
+ * If a bit of the row register is HIGH, then a key is pressed at this row/col
+ *
+ * - The columns 1 to 4 are on P3_4 to P3_7
+ * - The rows 1 to 8 are on P1_0 to P1_7
+ */
+
 /** Read the key matrix
  *
  * probe each 4 columns to see if a key on one of the 8 rows is pressed
