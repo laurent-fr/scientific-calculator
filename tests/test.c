@@ -371,7 +371,44 @@ void test_add() {
 	stack_op_add();
 	printf_number(stack_peek(),"00 00 00 00 10 00 / 10 00");
 
+}
 
+void test_number_to_disp() {
+
+	int i;
+	t_number n;
+
+	printf_test("number_to_disp");
+
+	// 0.
+	n.m[0]=0x00; n.m[1]=0x00; n.m[2]=0x00; n.m[3]=0x00; n.m[4]=0x00; n.m[5]=0x00; 
+	n.e[0]=0x00; n.e[1]=0x00;
+	disp_from_number(&n);
+	printf_display_mem("0b 0b 0b 0b 0b 0b 0b 0b 10 0b 0b 0b");	
+
+	// 8.7654321
+	n.m[0]=0x00; n.m[1]=0x21; n.m[2]=0x43; n.m[3]=0x65; n.m[4]=0x87; n.m[5]=0x00; 
+	n.e[0]=0x00; n.e[1]=0x00;
+	disp_from_number(&n);
+	printf_display_mem("0b 18 07 06 05 04 03 02 01 0b 0b 0b");	
+
+	// 123.
+	n.m[0]=0x00; n.m[1]=0x00; n.m[2]=0x00; n.m[3]=0x30; n.m[4]=0x12; n.m[5]=0x00; 
+	n.e[0]=0x02; n.e[1]=0x00;
+	disp_from_number(&n);
+	printf_display_mem("0b 0b 0b 0b 0b 0b 01 02 13 0b 0b 0b");	
+
+	// -123.
+	n.m[0]=0x00; n.m[1]=0x00; n.m[2]=0x00; n.m[3]=0x70; n.m[4]=0x87; n.m[5]=0x99; 
+	n.e[0]=0x02; n.e[1]=0x00;
+	disp_from_number(&n);
+	printf_display_mem("0a 0b 0b 0b 0b 0b 01 02 13 0b 0b 0b");	
+
+	// 1.23E-4
+	n.m[0]=0x00; n.m[1]=0x00; n.m[2]=0x00; n.m[3]=0x30; n.m[4]=0x12; n.m[5]=0x00; 
+	n.e[0]=0x96; n.e[1]=0x99;
+	disp_from_number(&n);
+	printf_display_mem("0b 0b 0b 0b 0b 0b 11 02 03 0a 00 04");	
 
 
 }
@@ -381,6 +418,7 @@ void main() {
 	test_disp_add_digit();
 	test_disp_to_number();
 	test_add();
+	test_number_to_disp();
 
 	if (exit_code==0) 
 		printf("\nSUCCESS !\n");

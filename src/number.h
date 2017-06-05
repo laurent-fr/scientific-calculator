@@ -32,8 +32,11 @@ void mantiss_copy(__idata unsigned char *m1,__idata unsigned char *m2);
 
 // exponent functions
 void exponent_set_zero(__idata unsigned char *e);
+unsigned char exponent_is_zero(__idata unsigned char *e);
 void exponent_inc(__idata unsigned char *e);
+void exponent_dec(__idata unsigned char *e);
 void exponent_complement(__idata unsigned char *e);
+unsigned char exponent_is_negative(__idata unsigned char *e);
 void exponent_add(__idata unsigned char *e1,__idata unsigned char *e2);
 void exponent_sub(__idata unsigned char *e1,__idata unsigned char *e2);
 void exponent_copy(__idata unsigned char *e1,__idata unsigned char *e2);

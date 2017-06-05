@@ -189,6 +189,11 @@ void exponent_inc(__idata unsigned char *e) {
     if ( (*e&0x0f)>9) *e+=6;
 }
 
+// TODO : overflow
+void exponent_dec(unsigned char *e) {
+    (*e)--;
+}
+
 void exponent_complement(__idata unsigned char *e) {
     unsigned char i;
     __idata unsigned char *ptr=e;
@@ -197,6 +202,14 @@ void exponent_complement(__idata unsigned char *e) {
         ptr++;
     }
     exponent_inc(e);
+}
+
+unsigned char exponent_is_negative(__idata unsigned char *e) {
+    return *(e+1)?1:0;
+}
+
+unsigned char exponent_is_zero(__idata unsigned char *e) {
+    return *e?0:1;
 }
 
 void exponent_copy(__idata unsigned char *e1,__idata unsigned char *e2) {

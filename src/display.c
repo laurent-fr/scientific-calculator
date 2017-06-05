@@ -246,5 +246,65 @@ void disp_to_number(__idata t_number *n) {
 
 
 void disp_from_number(__idata t_number *n) {
-    n;
+    t_number tmp_n;
+    unsigned char i;
+    unsigned char dot_pos;
+    __idata unsigned char *ptr;
+
+    disp_init();
+
+    if (mantiss_is_zero(n->m)) return;
+
+    number_copy(&tmp_n,n);
+    
+    // mantiss sign
+    if (mantiss_is_negative(tmp_n.m)) {
+        display_mem[0]=DIGIT_MINUS;
+        mantiss_complement(tmp_n.m);
+    }
+
+    // display the mantiss
+    ptr=display_mem+7;
+    for(i=1;i<5;i++) {
+        *(ptr++)=(tmp_n.m[i]&0xf0)>>4;
+        *ptr=tmp_n.m[i]&0x0f;
+        ptr-=3;
+    }
+
+    // dot
+    dot_pos=1;
+
+    // right pad the mantiss
+    while(display_mem[8]==0) {
+        for(i=8;i>1;i--) {
+            display_mem[i]=display_mem[i-1];
+        }
+        display_mem[1]=DIGIT_BLANK;
+        dot_pos++;
+    }
+
+   
+    // exponent sign
+    if (exponent_is_negative(tmp_n.e)) {
+        display_mem[9]=DIGIT_MINUS;
+        exponent_complement(tmp_n.e);
+    }
+
+    // decrement the exponent until it is <=0 or the dot at the last digit
+    if (display_mem[9]==DIGIT_BLANK) {
+        while( (dot_pos<8) && tmp_n.e[0] ) {
+            dot_pos++;
+            exponent_dec(tmp_n.e);
+        }
+    }
+
+    // display dot
+    display_mem[dot_pos]|=0x10;
+
+    // display the exponent
+    if (!exponent_is_zero(tmp_n.e)) {
+        ptr=&display_mem[10];
+        *(ptr++)=(tmp_n.e[0] & 0xf0)>>4;
+        *ptr= tmp_n.e[0] & 0x0f;
+    }
 }
