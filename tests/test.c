@@ -180,6 +180,8 @@ void test_add() {
 
 	stack_init();
 
+	printf("* 5. + 9. = 14.\n");
+
 	// 5.
 	disp_init();
 	display_mem[8]=0x15;
@@ -199,6 +201,7 @@ void test_add() {
 	stack_op_add();
 	printf_number(stack_peek(),"00 00 00 00 14 00 / 01 00");
 
+	printf("* -5. + -9. = -14.\n");
 
 	// -5.
 	disp_init();
@@ -220,6 +223,7 @@ void test_add() {
 	stack_op_add();
 	printf_number(stack_peek(),"00 00 00 00 86 99 / 01 00");
 
+	printf("* -1. + 1. = 0.\n");
 
 	// -1.
 	disp_init();
@@ -239,6 +243,133 @@ void test_add() {
 	// -1.+1. = 0.
 	stack_op_add();
 	printf_number(stack_peek(),"00 00 00 00 00 00 / 00 00");
+
+	printf("* 9. + 123. = 134.\n");
+
+	// 9.
+	disp_init();
+	display_mem[8]=0x19;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 90 00 / 00 00");
+
+	// 123.
+	disp_init();
+	display_mem[6]=0x01;
+	display_mem[7]=0x02;
+	display_mem[8]=0x13;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 30 12 00 / 02 00");
+
+	// 9. + 123. = 132.
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 20 13 00 / 02 00");
+
+	printf("* 999. + 1. = 1000.\n");
+
+	// 999.
+	disp_init();
+	display_mem[6]=0x09;
+	display_mem[7]=0x09;
+	display_mem[8]=0x19;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 90 99 00 / 02 00");
+
+	// 1.
+	disp_init();
+	display_mem[8]=0x11;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 00 00");
+
+	// 999. + 1. = 1000.
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 10 00 / 03 00");
+
+	printf("* 1. + 0. = 1.\n");
+
+	// 1.
+	disp_init();
+	display_mem[8]=0x11;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 00 00");
+
+	// 0.
+	disp_init();
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 00 00 / 00 00");
+
+	// 1. + 0. = 1.
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 10 00 / 00 00");
+
+	printf("* 0. + 1. = 1.\n");
+
+	// 0.
+	disp_init();
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 00 00 / 00 00");
+
+	// 1.
+	disp_init();
+	display_mem[8]=0x11;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 00 00");
+
+	// 0. + 1. = 1.
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 10 00 / 00 00");
+
+	printf("* 1. + 1.E10 = 1.E10\n");
+
+	// 1.
+	disp_init();
+	display_mem[8]=0x11;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 00 00");
+
+	// 1.E10
+	disp_init();
+	display_mem[8]=0x11;
+	display_mem[10]=0x01;
+	display_mem[11]=0x00;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 10 00");
+
+	//  1.E10 + 1. = 1.E10
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 10 00 / 10 00");
+
+	printf("* 1.E10 + 1. = 1.E10\n");
+
+	// 1.E10
+	disp_init();
+	display_mem[8]=0x11;
+	display_mem[10]=0x01;
+	display_mem[11]=0x00;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 10 00");
+
+	// 1.
+	disp_init();
+	display_mem[8]=0x11;
+	n=stack_allocate();
+	disp_to_number(n);
+	printf_number(n,"00 00 00 00 10 00 / 00 00");
+
+
+	// 1. + 1.E10 = 1.E10
+	stack_op_add();
+	printf_number(stack_peek(),"00 00 00 00 10 00 / 10 00");
 
 
 

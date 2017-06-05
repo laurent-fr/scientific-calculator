@@ -18,6 +18,8 @@ void number_sub(__idata t_number *n1,__idata t_number *n2);
 void number_mul(__idata t_number *n1,__idata t_number *n2);
 void number_div(__idata t_number *n1,__idata t_number *n2);
 
+void number_copy(__idata t_number *n1,__idata t_number *n2);
+
 // mantiss functions
 void mantiss_set_zero(__idata unsigned char *m);
 unsigned char mantiss_is_zero(__idata unsigned char *m);
@@ -25,11 +27,15 @@ void mantiss_inc(__idata unsigned char *m);
 void mantiss_complement(__idata unsigned char *m);
 unsigned char mantiss_is_negative(__idata unsigned char *m);
 void mantiss_div10(__idata unsigned char *m);
-void mantiss_sum(__idata unsigned char *m1,__idata unsigned char *m2);
+void mantiss_add(__idata unsigned char *m1,__idata unsigned char *m2);
+void mantiss_copy(__idata unsigned char *m1,__idata unsigned char *m2);
 
 // exponent functions
 void exponent_set_zero(__idata unsigned char *e);
 void exponent_inc(__idata unsigned char *e);
 void exponent_complement(__idata unsigned char *e);
+void exponent_add(__idata unsigned char *e1,__idata unsigned char *e2);
+void exponent_sub(__idata unsigned char *e1,__idata unsigned char *e2);
+void exponent_copy(__idata unsigned char *e1,__idata unsigned char *e2);
 
 #endif
