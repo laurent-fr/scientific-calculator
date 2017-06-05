@@ -14,4 +14,6 @@ void stack_op_sub();
 void stack_op_mul();
 void stack_op_div();
 
+void stack_op_const_pi();
+
 #endif

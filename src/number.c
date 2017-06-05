@@ -95,6 +95,16 @@ void number_copy(__idata t_number *n1,__idata t_number *n2) {
     exponent_copy(n1->e,n2->e);
 }
 
+void number_copy_constant(__idata t_number *n1,__code const t_number *n2) {
+    unsigned char i;
+    __idata unsigned char *ptr1;
+    __code const unsigned char *ptr2;
+
+    ptr1=n1->m;
+    ptr2=n2->m;
+    for(i=0;i<MANTISS_BYTES;i++) *(ptr1++)=*(ptr2++);
+}
+
 // mantiss functions
 void mantiss_set_zero(__idata unsigned char *m) {
     unsigned char i;
@@ -190,7 +200,7 @@ void exponent_inc(__idata unsigned char *e) {
 }
 
 // TODO : overflow
-void exponent_dec(unsigned char *e) {
+void exponent_dec(__idata unsigned char *e) {
     (*e)--;
 }
 

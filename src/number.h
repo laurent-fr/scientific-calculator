@@ -19,6 +19,7 @@ void number_mul(__idata t_number *n1,__idata t_number *n2);
 void number_div(__idata t_number *n1,__idata t_number *n2);
 
 void number_copy(__idata t_number *n1,__idata t_number *n2);
+void number_copy_constant(__idata t_number *n1,__code const t_number *n2);
 
 // mantiss functions
 void mantiss_set_zero(__idata unsigned char *m);

@@ -12,7 +12,6 @@ void init() {
 void loop() {
  char key;
  unsigned char must_init_display=0;
-
  __idata t_number *n;
 
     // wait until no key is pressed
