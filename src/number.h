@@ -23,13 +23,13 @@ void mantiss_set_zero(__idata unsigned char *m);
 unsigned char mantiss_is_zero(__idata unsigned char *m);
 void mantiss_inc(__idata unsigned char *m);
 void mantiss_complement(__idata unsigned char *m);
-void mantiss_da(__idata unsigned char *m);
 unsigned char mantiss_is_negative(__idata unsigned char *m);
+void mantiss_div10(__idata unsigned char *m);
+void mantiss_sum(__idata unsigned char *m1,__idata unsigned char *m2);
 
 // exponent functions
 void exponent_set_zero(__idata unsigned char *e);
 void exponent_inc(__idata unsigned char *e);
 void exponent_complement(__idata unsigned char *e);
-void exponent_da(__idata unsigned char *e);
 
 #endif

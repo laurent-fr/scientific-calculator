@@ -14,10 +14,20 @@ void number_add(__idata t_number *n1,__idata t_number *n2) {
     // TODO
 
     // sum the mantisses
+    mantiss_sum(n1->m,n2->m);
+
+    // normalize the result
     ptr1=n1->m;
-    ptr2=n2->m;
-    for(i=0;i<MANTISS_BYTES;i++) *(ptr1++)+=*(ptr2++);
-    mantiss_da(n1->m);
+    ptr1+=5;
+    if (((*ptr1&0xf0)==0)&&(*ptr1)) { //pos
+        mantiss_div10(n1->m);
+        exponent_inc(n1->e);
+    }
+    if ((*ptr1&0xf0)==0x90) { //neg
+        mantiss_div10(n1->m);
+        *ptr1=0x99;
+        exponent_inc(n1->e);
+    }
     
 }
 
@@ -51,9 +61,18 @@ unsigned char mantiss_is_zero(__idata unsigned char *m) {
     return 1;
 }
 
+// TODO : overflow
 void mantiss_inc(__idata unsigned char *m) {
+    unsigned char i;
+    unsigned char carry=0;
     (*m)++;
-    mantiss_da(m);
+    for(i=0;i<MANTISS_BYTES;i ++) {
+        *m+=carry; carry=0;
+        if ( (*m&0x0f) >9) *m+=6;
+        if ( (*m&0xf0) > 0x90) { *m+=0x60; carry=1;}
+        m++;
+    }
+
 }
 
 void mantiss_complement(__idata unsigned char *m) {
@@ -64,48 +83,48 @@ void mantiss_complement(__idata unsigned char *m) {
         ptr++;
     }
     mantiss_inc(m);
+  //  *(m+5)&=0xf; // 0 on last position
 }
 
 unsigned char mantiss_is_negative(__idata unsigned char *m) {
     return *(m+5)?1:0;
 }
 
-void mantiss_da(__idata unsigned char *m) __naked {
-
-// TODO : carry ...
-#ifdef IS_TARGET
-    m;
-
-    __asm
-    push ar0
-    push ar6
-    mov r0,dpl
-    mov r6,#6
-    mantiss_da_loop$:
-    mov a,r0
-    da a 
-    mov r0,a
-    djnz r6,mantiss_da_loop$
-    pop ar6
-    pop ar0
-    ret
-    __endasm;
-
-#else
-
-    int i;
+void mantiss_sum(__idata unsigned char *m1,__idata unsigned char *m2) {
+    unsigned char i;
+    unsigned char a;
     unsigned char carry=0;
-    for(i=0;i<MANTISS_BYTES;i++) {
-        *m+=carry;
-        if ((*m&0xf)>9) *m+=6;
-        if ((*m&0xf0)>0x90) { *m+=0x60; carry=1; } else carry=0;
-        m++;
-    }
 
-#endif
+    for(i=0;i<MANTISS_BYTES;i++) {
+        //sum
+        *m1+=*m2+carry;
+      
+        //lower nibble
+        a=(*m1&0x0f)+(*m2&0x0f)+carry;
+        if (a>9) *m1+=0x06;
+       
+        //upper nibble
+        a=(*m1>>4)+(*m2>>4);
+        if (a>9) carry=1; else carry=0;
+
+        if (carry) *m1+=0x60;
+
+        m1++;
+        m2++;
+    }
 
 }
 
+void mantiss_div10(__idata unsigned char *m) {
+    unsigned char i;
+    for(i=0;i<MANTISS_BYTES;i++) {
+        *m>>=4;
+        if (i!=(MANTISS_BYTES-1))
+            *m|=(*(m+1)&0x0f)<<4;
+
+        m++;
+    }
+}
 
 // exponent functions
 void exponent_set_zero(__idata unsigned char *e) {
@@ -113,9 +132,10 @@ void exponent_set_zero(__idata unsigned char *e) {
     *e=0;
 }
 
+// TODO : overflow
 void exponent_inc(__idata unsigned char *e) {
     (*e)++;
-    exponent_da(e);
+    if ( (*e&0x0f)>9) *e+=6;
 }
 
 void exponent_complement(__idata unsigned char *e) {
@@ -126,37 +146,4 @@ void exponent_complement(__idata unsigned char *e) {
         ptr++;
     }
     exponent_inc(e);
-}
-
-void exponent_da(__idata unsigned char *e) __naked {
-
-#ifdef IS_TARGET
-
-    e;
-
-   __asm
-    push ar0
-    push ar6
-    mov r0,dpl
-    mov r6,#2
-    exponent_da_loop$:
-    mov a,r0
-    da a
-    mov r0,a
-    djnz r6,exponent_da_loop$
-    pop ar6
-    pop ar0
-    ret
-    __endasm;
-
-#else
-
- int i;
-    for(i=0;i<EXPONENT_BYTES;i++) {
-        if ((*e&0xf)>9) *e+=6;
-        e++;
-    }
-
-#endif
-
 }

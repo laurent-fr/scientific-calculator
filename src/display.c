@@ -222,7 +222,7 @@ void disp_to_number(__idata t_number *n) {
     // pack the display data to the number
     ptr=n->m;
     *(ptr++)=0x00;
-    for(i=8;i>0;i-=2) *(ptr++)=((display_mem[i]&0x0f)<<4)|(display_mem[i-1]&0x0f);
+    for(i=8;i>0;i-=2) *(ptr++)=((display_mem[i-1]&0x0f)<<4)|(display_mem[i]&0x0f);
     *(ptr++)=0x00;
     ptr=n->e;
     *(ptr++)=(display_mem[10]<<4)|display_mem[11];
