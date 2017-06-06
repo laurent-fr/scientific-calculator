@@ -80,8 +80,36 @@ void number_sub(__idata t_number *n1,__idata t_number *n2) {
 
 // n1 <- n1*n2
 void number_mul(__idata t_number *n1,__idata t_number *n2) {
-    n1;
-    n2;
+
+    unsigned char is_negative=0;
+    unsigned char result[MANTISS_BYTES*2];
+    __data unsigned char *pos;
+    unsigned char i;
+
+    // get the sign, n1 & n2 must be >0
+    if (mantiss_is_negative(n1)) { is_negative=1; mantiss_complement(n1); }
+    if (mantiss_is_negative(n2)) { is_negative^=1; mantiss_complement(n2); }
+
+    // add the exponents
+    exponent_add(n1->e,n2->e);
+
+    // set the result to 0
+    pos=result;
+    for(i=0;i<MANTISS_BYTES*2;i++) *(pos++)=0;
+
+    // TODO
+
+    // odd
+
+    // >>4 + even
+
+    // normalize the result
+
+    // transfer the result to n1
+
+    // set the sign of the result
+    if (is_negative) mantiss_complement(n1);
+
 }
 
 // n1 <- n1/n2
