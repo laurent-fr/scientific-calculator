@@ -25,6 +25,9 @@ display.o: display.c
 constants.o: constants.c
 	$(CC) -c constants.c
 
+stack.o: stack.c
+	$(CC) -c stack.c
+
 test.o: test.c
 	$(CC) -c test.c
 
