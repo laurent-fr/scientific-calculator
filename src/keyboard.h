@@ -17,7 +17,7 @@
 #define KEY_SIN 8
 #define KEY_ASIN 8 // 2nd
 #define KEY_COS 9
-#define KEY_ACOS 8 // 2nd
+#define KEY_ACOS 9 // 2nd
 #define KEY_TAN 10
 #define KEY_ATAN 10 // 2nd
 #define KEY_4 11

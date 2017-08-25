@@ -37,6 +37,10 @@ void stack_op_add() {
 }
 
 void stack_op_sub() { 
+    __idata t_number *ptr=stack_ptr-1;
+    mantiss_complement(stack_ptr->m);
+    number_add(ptr,stack_ptr);
+    stack_ptr=ptr;
 }
 
 void stack_op_mul() { 

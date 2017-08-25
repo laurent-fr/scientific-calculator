@@ -12,6 +12,7 @@ void init() {
 void loop() {
  char key;
  unsigned char must_init_display=0;
+ unsigned char fn_2nd=0;
  __idata t_number *n;
 
     // wait until no key is pressed
@@ -26,6 +27,21 @@ void loop() {
         key = kbd_readkey();
 
         if (key==-1) continue;
+
+        if (key==KEY_2ND) {
+            fn_2nd^=1;
+            continue;
+        }
+
+        if (key==KEY_C) {
+            // TODO
+            continue;
+        }
+
+        if (key==KEY_DEGRAD) {
+            // TODO
+            continue;
+        }
 
         switch(key) {
             case KEY_0:
@@ -68,34 +84,98 @@ void loop() {
             case KEY_SUB:
             case KEY_MUL:
             case KEY_DIV:
+            case KEY_POW:
+            case KEY_INV:
+            case KEY_SWP:
+            case KEY_DUP:
+            case KEY_SQRT:
+            case KEY_SIN:
+            case KEY_COS:
+            case KEY_TAN:
+            case KEY_LN:
+            case KEY_LOG:
                 n=stack_allocate(); 
                 disp_to_number(n);
         }
 
         switch(key) {
-            case KEY_ENTER: 
-                disp_init();
+            case KEY_ENTER: disp_init();
                 break;
 
             // basic operations
-            case KEY_ADD:
-                stack_op_add();
+            case KEY_ADD: stack_op_add();
+                break;
 
-            case KEY_SUB:
-                stack_op_sub();
+            case KEY_SUB: stack_op_sub();
+                break;
 
-            case KEY_MUL:
-                stack_op_mul();
+            case KEY_MUL: stack_op_mul();
+                break;
 
-            case KEY_DIV:
-                stack_op_div();
+            case KEY_DIV: stack_op_div();
+                break;
+
+            // advanced operations
+            case KEY_POW: // TODO
+            case KEY_INV: // TODO
+            case KEY_SWP: // TODO
+            case KEY_DUP: // TODO
         }
 
+        // keys with 2nd function
+        if (!fn_2nd) {
+            switch(key) {
+                case KEY_SQRT: // TODO
+                break;
+                case KEY_CONST_PI: // TODO
+                break;
+                case KEY_SIN: // TODO
+                break;
+                case KEY_COS: // TODO
+                break;
+                case KEY_TAN: // TODO
+                break;
+                case KEY_LN: // TODO
+                break;
+                case KEY_LOG: // TODO
+                break;
+            }
+        } else {
+            switch(key) {
+                case KEY_SQR: // TODO
+                break;
+                case KEY_CONST_E: // TODO
+                break;
+                case KEY_ASIN: // TODO
+                break;
+                case KEY_ACOS: // TODO
+                break;
+                case KEY_ATAN: // TODO
+                break;
+                case KEY_EXP: // TODO
+                break;
+                case KEY_10POW: // TODO
+                break;
+            }
+            fn_2nd=0;
+        }
+
+        // show the result on the display
         switch(key) {
             case KEY_ADD:
             case KEY_SUB:
             case KEY_MUL:
             case KEY_DIV:
+            case KEY_POW:
+            case KEY_INV:
+            case KEY_SWP:
+            case KEY_DUP:
+            case KEY_SQRT:
+            case KEY_CONST_PI:
+            case KEY_SIN:
+            case KEY_COS:
+            case KEY_TAN:
+            case KEY_LN:
                 disp_from_number(stack_peek());
                 must_init_display=1;
                 break;
