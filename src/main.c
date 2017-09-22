@@ -11,8 +11,8 @@ void init() {
 
 void loop() {
  char key;
- unsigned char must_init_display=0;
- unsigned char fn_2nd=0;
+ static unsigned char must_init_display=0;
+ static unsigned char fn_2nd=0;
  __idata t_number *n;
 
     // wait until no key is pressed
@@ -34,7 +34,7 @@ void loop() {
         }
 
         if (key==KEY_C) {
-            // TODO
+            disp_init();
             continue;
         }
 
@@ -57,7 +57,7 @@ void loop() {
             case KEY_DOT:
             case KEY_E:
             case KEY_SIGN:
-                if (must_init_display) disp_init();
+                if (must_init_display) { disp_init(); must_init_display=0; }
         }
 
         switch(key) {

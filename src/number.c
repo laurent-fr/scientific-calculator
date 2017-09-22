@@ -86,6 +86,16 @@ void number_mul(__idata t_number *n1,__idata t_number *n2) {
     __data unsigned char *pos;
     unsigned char i;
 
+    // n1 is zero
+    if (mantiss_is_zero(n1->m)) return;
+   
+    // n2 is zero
+    if (mantiss_is_zero(n2->m)) {
+        number_copy(n1,n2);
+        return;
+    }
+   
+
     // get the sign, n1 & n2 must be >0
     if (mantiss_is_negative(n1->m)) { is_negative=1; mantiss_complement(n1->m); }
     if (mantiss_is_negative(n2->m)) { is_negative^=1; mantiss_complement(n2->m); }
@@ -230,6 +240,7 @@ void exponent_inc(__idata unsigned char *e) {
 // TODO : overflow
 void exponent_dec(__idata unsigned char *e) {
     (*e)--;
+    // TODO BCD align
 }
 
 void exponent_complement(__idata unsigned char *e) {

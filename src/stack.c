@@ -29,6 +29,14 @@ __idata t_number *stack_peek() {
     return stack_ptr;
 }
 
+unsigned char stack_is_full() {
+ // TODO
+}
+
+unsigned char stack_is_empty() {
+ // TODO
+}
+
 // TODO : stack empty ...
 void stack_op_add() {
     __idata t_number *ptr=stack_ptr-1;
@@ -43,10 +51,19 @@ void stack_op_sub() {
     stack_ptr=ptr;
 }
 
+
 void stack_op_mul() { 
+    __idata t_number *ptr=stack_ptr-1;
+    mantiss_complement(stack_ptr->m);
+    number_mul(ptr,stack_ptr);
+    stack_ptr=ptr;
 }
 
 void stack_op_div() { 
+    __idata t_number *ptr=stack_ptr-1;
+    mantiss_complement(stack_ptr->m);
+    number_div(ptr,stack_ptr);
+    stack_ptr=ptr;
 }
 
 void stack_op_const_pi() {
